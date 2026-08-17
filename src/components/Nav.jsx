@@ -17,13 +17,15 @@ export default function Nav() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 30);
+    const onScroll = () => setScrolled(window.scrollY > 40);
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
   useEffect(() => {
-    const onResize = () => { if (window.innerWidth >= 768) setMenuOpen(false); };
+    const onResize = () => {
+      if (window.innerWidth >= 768) setMenuOpen(false);
+    };
     window.addEventListener('resize', onResize);
     return () => window.removeEventListener('resize', onResize);
   }, []);
@@ -37,83 +39,169 @@ export default function Nav() {
     }
   };
 
+  const textColor = scrolled ? '#1C1C1C' : '#FFFFFF';
+  const textMuted = scrolled ? '#6A5F50' : 'rgba(255, 255, 255, 0.8)';
+  const dividerBg = scrolled ? 'rgba(0, 0, 0, 0.12)' : 'rgba(255, 255, 255, 0.25)';
+
   return (
     <>
-      <motion.header
+      <header
         style={{
           position: 'fixed',
-          top: 0,
+          top: 18,
           left: 0,
           right: 0,
           zIndex: 50,
+          display: 'flex',
+          justifyContent: 'center',
+          pointerEvents: 'none',
+          padding: '0 1rem',
         }}
-        animate={{
-          backgroundColor: scrolled ? 'rgba(20, 16, 10, 0.92)' : 'rgba(0,0,0,0)',
-          backdropFilter: scrolled ? 'blur(16px)' : 'blur(0px)',
-          boxShadow: scrolled ? '0 1px 0 rgba(255,255,255,0.06)' : 'none',
-        }}
-        transition={{ duration: 0.3 }}
       >
-        <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: 68 }}>
-          {/* Logo */}
-          <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none' }}>
-            <div style={{ width: 32, height: 32, borderRadius: '50%', background: 'linear-gradient(135deg, #F4A025, #8B1A1A)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-              <Compass size={15} color="#fff" />
+        <motion.div
+          style={{
+            pointerEvents: 'auto',
+            display: 'flex',
+            alignItems: 'center',
+            gap: 14,
+            padding: '7px 12px 7px 16px',
+            borderRadius: 9999,
+            background: scrolled
+              ? 'rgba(255, 255, 255, 0.88)'
+              : 'rgba(255, 255, 255, 0.14)',
+            backdropFilter: 'blur(24px) saturate(180%)',
+            WebkitBackdropFilter: 'blur(24px) saturate(180%)',
+            border: scrolled
+              ? '1px solid rgba(232, 224, 213, 0.95)'
+              : '1px solid rgba(255, 255, 255, 0.3)',
+            boxShadow: scrolled
+              ? '0 12px 36px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.04)'
+              : '0 8px 32px rgba(0, 0, 0, 0.25), inset 0 0 0 1px rgba(255, 255, 255, 0.15)',
+            transition: 'all 0.35s cubic-bezier(0.4, 0, 0.2, 1)',
+            maxWidth: '100%',
+          }}
+          initial={{ y: -20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 0.5, ease: 'easeOut' }}
+        >
+          {/* Brand Logo */}
+          <Link
+            to="/"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 8,
+              textDecoration: 'none',
+              paddingRight: 4,
+            }}
+          >
+            <div
+              style={{
+                width: 28,
+                height: 28,
+                borderRadius: '50%',
+                background: 'linear-gradient(135deg, #F4A025, #8B1A1A)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                flexShrink: 0,
+                boxShadow: '0 2px 8px rgba(244,160,37,0.4)',
+              }}
+            >
+              <Compass size={14} color="#fff" />
             </div>
-            <span style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: 17, fontWeight: 600, color: '#fff', letterSpacing: '0.01em' }}>
-              Explore <span style={{ color: '#F4A025' }}>India</span>
+            <span
+              style={{
+                fontFamily: "'Playfair Display', Georgia, serif",
+                fontSize: 16,
+                fontWeight: 700,
+                color: textColor,
+                letterSpacing: '0.01em',
+                whiteSpace: 'nowrap',
+                textShadow: scrolled ? 'none' : '0 1px 4px rgba(0,0,0,0.4)',
+                transition: 'color 0.3s',
+              }}
+            >
+              Explore <span style={{ color: '#D4880A' }}>India</span>
             </span>
           </Link>
 
-          {/* Desktop nav */}
-          <nav style={{ display: 'flex', alignItems: 'center', gap: 4 }} className="hidden md:flex">
+          {/* Vertical Divider */}
+          <div
+            className="hidden md:block"
+            style={{
+              width: 1,
+              height: 18,
+              background: dividerBg,
+              transition: 'background 0.3s',
+            }}
+          />
+
+          {/* Desktop Nav Links */}
+          <nav
+            className="hidden md:flex"
+            style={{ alignItems: 'center', gap: 3 }}
+          >
             {NAV_LINKS.map(({ to, label }) => (
               <NavLink
                 key={to}
                 to={to}
                 end={to === '/'}
                 style={({ isActive }) => ({
-                  padding: '8px 16px',
+                  padding: '6px 15px',
                   borderRadius: 999,
-                  fontSize: 14,
-                  fontWeight: 500,
+                  fontSize: 13,
+                  fontWeight: 600,
                   fontFamily: 'Inter, sans-serif',
                   textDecoration: 'none',
-                  color: isActive ? '#fff' : 'rgba(255,255,255,0.72)',
-                  background: isActive ? 'rgba(255,255,255,0.1)' : 'transparent',
-                  transition: 'all 0.2s',
+                  color: isActive ? '#fff' : textMuted,
+                  background: isActive
+                    ? 'linear-gradient(135deg, #D4880A, #8B1A1A)'
+                    : 'transparent',
+                  boxShadow: isActive
+                    ? '0 2px 10px rgba(212, 136, 10, 0.35)'
+                    : 'none',
+                  textShadow: isActive || !scrolled ? '0 1px 3px rgba(0,0,0,0.3)' : 'none',
+                  transition: 'all 0.22s ease',
+                  letterSpacing: '0.01em',
                 })}
               >
                 {label}
               </NavLink>
             ))}
+          </nav>
 
-            {/* Search inline input */}
+          {/* Search Toggle / Input (Desktop) */}
+          <div className="hidden md:flex" style={{ alignItems: 'center' }}>
             <AnimatePresence>
               {searchOpen && (
                 <motion.form
-                  key="search"
+                  key="search-form"
                   initial={{ width: 0, opacity: 0 }}
-                  animate={{ width: 220, opacity: 1 }}
+                  animate={{ width: 180, opacity: 1 }}
                   exit={{ width: 0, opacity: 0 }}
                   transition={{ duration: 0.22 }}
                   onSubmit={handleSearch}
-                  style={{ overflow: 'hidden', marginLeft: 4 }}
+                  style={{ overflow: 'hidden', marginRight: 4 }}
                 >
                   <input
                     autoFocus
                     type="text"
                     value={searchVal}
                     onChange={(e) => setSearchVal(e.target.value)}
-                    placeholder="Search destinations…"
+                    placeholder="Search…"
                     style={{
                       width: '100%',
-                      background: 'rgba(255,255,255,0.1)',
-                      border: '1px solid rgba(255,255,255,0.2)',
+                      background: scrolled
+                        ? 'rgba(0, 0, 0, 0.06)'
+                        : 'rgba(255, 255, 255, 0.2)',
+                      border: scrolled
+                        ? '1px solid rgba(0, 0, 0, 0.12)'
+                        : '1px solid rgba(255, 255, 255, 0.35)',
                       borderRadius: 999,
-                      padding: '7px 16px',
-                      color: '#fff',
-                      fontSize: 13,
+                      padding: '5px 12px',
+                      color: textColor,
+                      fontSize: 12.5,
                       fontFamily: 'Inter, sans-serif',
                       outline: 'none',
                     }}
@@ -125,32 +213,71 @@ export default function Nav() {
             <button
               onClick={() => setSearchOpen((v) => !v)}
               aria-label="Toggle search"
-              style={{ padding: 8, borderRadius: '50%', background: 'transparent', border: 'none', cursor: 'pointer', color: 'rgba(255,255,255,0.7)', marginLeft: 4 }}
+              style={{
+                width: 30,
+                height: 30,
+                borderRadius: '50%',
+                background: searchOpen
+                  ? 'rgba(244,160,37,0.25)'
+                  : scrolled
+                  ? 'rgba(0, 0, 0, 0.05)'
+                  : 'rgba(255, 255, 255, 0.18)',
+                border: scrolled
+                  ? '1px solid rgba(0, 0, 0, 0.08)'
+                  : '1px solid rgba(255, 255, 255, 0.25)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                cursor: 'pointer',
+                color: searchOpen ? '#D4880A' : textColor,
+                transition: 'all 0.2s',
+              }}
             >
-              <Search size={18} color="rgba(255,255,255,0.7)" />
+              <Search size={13} />
             </button>
-          </nav>
+          </div>
 
-          {/* Mobile hamburger */}
+          {/* Mobile Menu Button */}
           <button
             className="md:hidden"
             onClick={() => setMenuOpen((v) => !v)}
             aria-label="Toggle menu"
             aria-expanded={menuOpen}
-            style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 6, color: '#fff' }}
+            style={{
+              width: 30,
+              height: 30,
+              borderRadius: '50%',
+              background: scrolled
+                ? 'rgba(0,0,0,0.06)'
+                : 'rgba(255,255,255,0.2)',
+              border: scrolled
+                ? '1px solid rgba(0,0,0,0.1)'
+                : '1px solid rgba(255,255,255,0.3)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              cursor: 'pointer',
+              color: textColor,
+            }}
           >
-            {menuOpen ? <X size={22} color="#fff" /> : <Menu size={22} color="#fff" />}
+            {menuOpen ? <X size={15} /> : <Menu size={15} />}
           </button>
-        </div>
-      </motion.header>
+        </motion.div>
+      </header>
 
-      {/* Mobile slide-in menu */}
+      {/* Mobile Drawer */}
       <AnimatePresence>
         {menuOpen && (
           <>
             <motion.div
               key="backdrop"
-              style={{ position: 'fixed', inset: 0, zIndex: 40, background: 'rgba(0,0,0,0.6)' }}
+              style={{
+                position: 'fixed',
+                inset: 0,
+                zIndex: 45,
+                background: 'rgba(0,0,0,0.55)',
+                backdropFilter: 'blur(8px)',
+              }}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -160,69 +287,87 @@ export default function Nav() {
               key="drawer"
               style={{
                 position: 'fixed',
-                top: 0,
-                right: 0,
-                bottom: 0,
+                top: 76,
+                left: 16,
+                right: 16,
                 zIndex: 50,
-                width: 280,
-                background: 'rgba(15, 10, 6, 0.98)',
-                backdropFilter: 'blur(20px)',
+                background: 'rgba(255, 255, 255, 0.94)',
+                backdropFilter: 'blur(28px)',
+                border: '1px solid rgba(232, 224, 213, 0.95)',
+                borderRadius: 24,
+                padding: '22px 18px',
+                boxShadow: '0 20px 48px rgba(0,0,0,0.2)',
                 display: 'flex',
                 flexDirection: 'column',
-                padding: '80px 24px 32px',
+                gap: 8,
               }}
-              initial={{ x: '100%' }}
-              animate={{ x: 0 }}
-              exit={{ x: '100%' }}
-              transition={{ type: 'spring', damping: 28, stiffness: 280 }}
+              initial={{ opacity: 0, y: -16, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -16, scale: 0.95 }}
+              transition={{ duration: 0.25 }}
             >
-              {NAV_LINKS.map(({ to, label }, i) => (
-                <motion.div
+              {NAV_LINKS.map(({ to, label }) => (
+                <NavLink
                   key={to}
-                  initial={{ opacity: 0, x: 24 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.05 + i * 0.06 }}
+                  to={to}
+                  end={to === '/'}
+                  onClick={() => setMenuOpen(false)}
+                  style={({ isActive }) => ({
+                    padding: '12px 16px',
+                    borderRadius: 14,
+                    fontFamily: "'Playfair Display', Georgia, serif",
+                    fontSize: 17,
+                    fontWeight: 600,
+                    textDecoration: 'none',
+                    color: isActive ? '#fff' : '#1C1C1C',
+                    background: isActive
+                      ? 'linear-gradient(135deg, #D4880A, #8B1A1A)'
+                      : 'transparent',
+                    boxShadow: isActive
+                      ? '0 4px 12px rgba(212, 136, 10, 0.3)'
+                      : 'none',
+                  })}
                 >
-                  <NavLink
-                    to={to}
-                    end={to === '/'}
-                    onClick={() => setMenuOpen(false)}
-                    style={({ isActive }) => ({
-                      display: 'block',
-                      padding: '12px 16px',
-                      borderRadius: 12,
-                      fontFamily: "'Playfair Display', serif",
-                      fontSize: 20,
-                      fontWeight: 600,
-                      textDecoration: 'none',
-                      color: isActive ? '#fff' : 'rgba(255,255,255,0.65)',
-                      background: isActive ? 'rgba(255,255,255,0.08)' : 'transparent',
-                      marginBottom: 4,
-                    })}
-                  >
-                    {label}
-                  </NavLink>
-                </motion.div>
+                  {label}
+                </NavLink>
               ))}
 
-              <motion.form
-                initial={{ opacity: 0, x: 24 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.22 }}
-                onSubmit={(e) => { handleSearch(e); setMenuOpen(false); }}
-                style={{ marginTop: 20 }}
+              <form
+                onSubmit={(e) => {
+                  handleSearch(e);
+                  setMenuOpen(false);
+                }}
+                style={{ marginTop: 8 }}
               >
-                <div style={{ display: 'flex', alignItems: 'center', gap: 8, background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: 12, padding: '10px 14px' }}>
-                  <Search size={15} color="rgba(255,255,255,0.35)" />
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 10,
+                    background: 'rgba(0, 0, 0, 0.05)',
+                    border: '1px solid rgba(0, 0, 0, 0.1)',
+                    borderRadius: 999,
+                    padding: '9px 15px',
+                  }}
+                >
+                  <Search size={14} color="#7A7265" />
                   <input
                     type="text"
                     value={searchVal}
                     onChange={(e) => setSearchVal(e.target.value)}
                     placeholder="Search destinations…"
-                    style={{ flex: 1, background: 'transparent', border: 'none', outline: 'none', color: '#fff', fontSize: 14, fontFamily: 'Inter, sans-serif' }}
+                    style={{
+                      flex: 1,
+                      background: 'transparent',
+                      border: 'none',
+                      outline: 'none',
+                      color: '#1C1C1C',
+                      fontSize: 13.5,
+                      fontFamily: 'Inter, sans-serif',
+                    }}
                   />
                 </div>
-              </motion.form>
+              </form>
             </motion.nav>
           </>
         )}

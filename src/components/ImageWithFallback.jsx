@@ -159,24 +159,24 @@ const SILHOUETTE_MAP = {
   'stupa': StupaSvg,
 };
 
-/* ── ImageWithFallback ──────────────────────────────────────── */
+const EXTENSIONS = ['jpg', 'png', 'jpeg', 'webp'];
 
-/**
- * Attempts to load the real image from /public/images/destinations/{slug}/{type}.jpg
- * On error: renders a CSS duotone gradient placeholder with centered SVG silhouette.
- *
- * Props:
- *   slug     — destination slug (matches directory name)
- *   type     — 'hero' | 'card' | 'gallery-1' | 'gallery-2' | 'gallery-3'
- *   alt      — meaningful alt text
- *   religion — used to pick gradient + silhouette
- *   className — CSS classes for the outer container
- */
 export default function ImageWithFallback({ slug, type = 'card', alt, religion, className = '' }) {
+  const [extIndex, setExtIndex] = useState(0);
   const [failed, setFailed] = useState(false);
   const colors = getReligionColor(religion);
   const SilhouetteComp = SILHOUETTE_MAP[colors.silhouette] || TempleSpireSvg;
-  const src = `/images/destinations/${slug}/${type}.jpg`;
+
+  const currentExt = EXTENSIONS[extIndex] || 'jpg';
+  const src = `/images/destinations/${slug}/${type}.${currentExt}`;
+
+  const handleError = () => {
+    if (extIndex < EXTENSIONS.length - 1) {
+      setExtIndex((prev) => prev + 1);
+    } else {
+      setFailed(true);
+    }
+  };
 
   if (failed) {
     return (
@@ -216,9 +216,10 @@ export default function ImageWithFallback({ slug, type = 'card', alt, religion, 
       src={src}
       alt={alt}
       className={className}
-      onError={() => setFailed(true)}
+      onError={handleError}
       loading="lazy"
       style={{ objectFit: 'cover', width: '100%', height: '100%' }}
     />
   );
 }
+

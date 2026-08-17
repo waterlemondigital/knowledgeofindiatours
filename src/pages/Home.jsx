@@ -10,8 +10,9 @@ import { getUniqueStates, getUniqueReligions, normalizeState } from '../lib/filt
 import { getReligionColor } from '../lib/religionColors';
 
 /* ── Data ────────────────────────────────────────────────── */
-const FEATURED_SLUGS = ['golden-temple', 'kedarnath-temple', 'ajmer-sharif-dargah', 'tirupati-balaji', 'jagannath-temple'];
+const FEATURED_SLUGS = ['golden-temple', 'rishikesh', 'ajmer-sharif-dargah', 'tirupati-balaji', 'jagannath-temple'];
 const heroDestinations = FEATURED_SLUGS.map((s) => destinations.find((d) => d.slug === s)).filter(Boolean);
+
 const UNIQUE_STATES = getUniqueStates(destinations);
 const UNIQUE_RELIGIONS = getUniqueReligions(destinations);
 
