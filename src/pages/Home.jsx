@@ -122,7 +122,7 @@ function HeroSection() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const t = setInterval(() => setCurrent((i) => (i + 1) % heroDestinations.length), 7000);
+    const t = setInterval(() => setCurrent((i) => (i + 1) % heroDestinations.length), 4500);
     return () => clearInterval(t);
   }, []);
 
@@ -138,7 +138,6 @@ function HeroSection() {
 
   const dest = heroDestinations[current];
 
-
   const handleSubmit = (e) => {
     e.preventDefault();
     if (searchVal.trim()) navigate(`/explore?search=${encodeURIComponent(searchVal.trim())}`);
@@ -148,14 +147,15 @@ function HeroSection() {
     <section style={{ position: 'relative', width: '100%', height: '100svh', minHeight: 600, overflow: 'hidden', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
       {/* Background crossfade */}
       <AnimatePresence initial={false}>
-        <motion.div key={current} style={{ position: 'absolute', inset: 0 }} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 1.5 }}>
-          <motion.div style={{ position: 'absolute', inset: 0 }} initial={{ scale: 1 }} animate={{ scale: 1.09 }} transition={{ duration: 14, ease: 'linear' }}>
+        <motion.div key={current} style={{ position: 'absolute', inset: 0 }} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.8, ease: 'easeInOut' }}>
+          <motion.div style={{ position: 'absolute', inset: 0 }} initial={{ scale: 1 }} animate={{ scale: 1.08 }} transition={{ duration: 6, ease: 'linear' }}>
             <ImageWithFallback slug={dest.slug} type="hero" alt={`${dest.name} hero`} religion={dest.religion} className="w-full h-full object-cover" />
           </motion.div>
           <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.05) 25%, rgba(0,0,0,0.55) 65%, rgba(0,0,0,0.95) 100%)' }} />
           <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse 80% 60% at 50% 100%, rgba(139,26,26,0.4) 0%, transparent 70%)' }} />
         </motion.div>
       </AnimatePresence>
+
 
       {/* Floating decorative mandalas */}
       <motion.div
