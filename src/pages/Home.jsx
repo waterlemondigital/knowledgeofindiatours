@@ -41,25 +41,42 @@ function AnimCounter({ target, suffix = '' }) {
 
 /* ── Marquee Strip ───────────────────────────────────────── */
 function Marquee() {
-  const items = destinations.map((d) => d.display_title || d.name);
-  const doubled = [...items, ...items];
+  const doubled = [...destinations, ...destinations];
   return (
     <div style={{ overflow: 'hidden', background: '#1A1410', borderTop: '1px solid #2A2018', borderBottom: '1px solid #2A2018', padding: '14px 0' }}>
-      <motion.div
-        style={{ display: 'flex', gap: 48, whiteSpace: 'nowrap', width: 'max-content' }}
-        animate={{ x: [0, '-50%'] }}
-        transition={{ duration: 40, ease: 'linear', repeat: Infinity }}
-      >
-        {doubled.map((name, i) => (
-          <span key={i} style={{ display: 'inline-flex', alignItems: 'center', gap: 16, fontSize: 13, fontFamily: 'Inter, sans-serif', fontWeight: 500, color: 'rgba(255,255,255,0.4)', letterSpacing: '0.04em', textTransform: 'uppercase' }}>
-            {name}
-            <span style={{ width: 4, height: 4, borderRadius: '50%', background: '#F4A025', display: 'inline-block' }} />
-          </span>
-        ))}
-      </motion.div>
+      <div className="marquee-track" style={{ gap: 48, whiteSpace: 'nowrap' }}>
+        {doubled.map((d, i) => {
+          const name = d.display_title || d.name;
+          return (
+            <Link
+              key={`${d.slug}-${i}`}
+              to={`/destination/${d.slug}`}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 16,
+                fontSize: 13,
+                fontFamily: 'Inter, sans-serif',
+                fontWeight: 500,
+                color: 'rgba(255,255,255,0.45)',
+                letterSpacing: '0.04em',
+                textTransform: 'uppercase',
+                textDecoration: 'none',
+                transition: 'color 0.2s',
+              }}
+              onMouseEnter={(e) => (e.currentTarget.style.color = '#F4A025')}
+              onMouseLeave={(e) => (e.currentTarget.style.color = 'rgba(255,255,255,0.45)')}
+            >
+              <span>{name}</span>
+              <span style={{ width: 4, height: 4, borderRadius: '50%', background: '#F4A025', display: 'inline-block', flexShrink: 0 }} />
+            </Link>
+          );
+        })}
+      </div>
     </div>
   );
 }
+
 
 /* ── Decorative Mandala SVG ──────────────────────────────── */
 function Mandala({ size = 300, opacity = 0.07, color = '#F4A025' }) {
