@@ -126,7 +126,18 @@ function HeroSection() {
     return () => clearInterval(t);
   }, []);
 
+  // Preload next slide image so transitions are instant
+  useEffect(() => {
+    const nextIdx = (current + 1) % heroDestinations.length;
+    const nextDest = heroDestinations[nextIdx];
+    if (nextDest) {
+      const img = new Image();
+      img.src = `/images/destinations/${nextDest.slug}/hero.jpg`;
+    }
+  }, [current]);
+
   const dest = heroDestinations[current];
+
 
   const handleSubmit = (e) => {
     e.preventDefault();

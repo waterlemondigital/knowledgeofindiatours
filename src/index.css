@@ -104,3 +104,16 @@ h1, h2, h3, h4, h5, h6 {
   z-index: 9999;
 }
 
+/* ── Hardware Acceleration & Image Rendering ───────── */
+img {
+  content-visibility: auto;
+}
+
+.gpu-accelerated {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+  will-change: transform;
+}
+
+

@@ -164,6 +164,7 @@ const EXTENSIONS = ['jpg', 'png', 'jpeg', 'webp'];
 export default function ImageWithFallback({ slug, type = 'card', alt, religion, className = '' }) {
   const [extIndex, setExtIndex] = useState(0);
   const [failed, setFailed] = useState(false);
+  const [loaded, setLoaded] = useState(false);
   const colors = getReligionColor(religion);
   const SilhouetteComp = SILHOUETTE_MAP[colors.silhouette] || TempleSpireSvg;
 
@@ -211,15 +212,34 @@ export default function ImageWithFallback({ slug, type = 'card', alt, religion, 
     );
   }
 
+  const isHero = type === 'hero';
+
   return (
-    <img
-      src={src}
-      alt={alt}
-      className={className}
-      onError={handleError}
-      loading="lazy"
-      style={{ objectFit: 'cover', width: '100%', height: '100%' }}
-    />
+    <div
+      className={`relative overflow-hidden ${className}`}
+      style={{
+        background: `linear-gradient(160deg, ${colors.from}44 0%, ${colors.to}66 100%)`,
+      }}
+    >
+      <img
+        src={src}
+        alt={alt}
+        onLoad={() => setLoaded(true)}
+        onError={handleError}
+        loading={isHero ? 'eager' : 'lazy'}
+        fetchPriority={isHero ? 'high' : 'auto'}
+        decoding="async"
+        style={{
+          objectFit: 'cover',
+          width: '100%',
+          height: '100%',
+          opacity: loaded ? 1 : 0,
+          transition: 'opacity 0.35s ease-out',
+          willChange: 'opacity',
+        }}
+      />
+    </div>
   );
 }
+
 
